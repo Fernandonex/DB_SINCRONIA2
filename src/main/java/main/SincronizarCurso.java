@@ -43,24 +43,36 @@ public class SincronizarCurso {
 			for (int i = 0; i < array.size(); i++) {
 				listaAtualizacao.add(gson.fromJson(array.get(i), Curso.class));
 			}
-			inserir(listaAtualizacao);
-			desabilitar(listaAtualizacao);
+			inserirAlterar(listaAtualizacao);
 		} catch (Exception e) {
 			System.out.println("Conexão não estabeleciada: " + e.getMessage());
 		}
 	}
 
-	private void inserir(final List<Curso> listaInserir) {
+	private void inserirAlterar(final List<Curso> listaInserir) {
 		try {
 			for (Curso cur : listaInserir) {
-				if (cur.getStatusSincronizacao().equals("HABILITADO")) {
+				
 					List<Curso> listaRegistros = new ArrayList<Curso>();
-					listaRegistros =  dao.procuraObjeto(Curso.class, cur.getRegistroUnico());
-					if (listaRegistros.size()==0) {
+					// Busca o curso pelo registro unico
+					listaRegistros = dao.procuraObjeto(Curso.class, cur.getRegistroUnico());
+					// Se a lista for igual a zero, insere os novos cursos
+					if (listaRegistros.size() == 0) {
 						Curso curso = new Curso();
 						curso = cur;
 						dao.inserir(curso);
 						System.out.println("Curso inserido");
+					}
+					// Senão altera o curso
+					else {
+						for (Curso curso : listaRegistros) {
+							Curso rec = (Curso) dao.recuperaId(Curso.class, curso.getId());
+							rec.setNome(cur.getNome());
+							rec.setDescricao(cur.getDescricao());
+							rec.setStatusSincronizacao(cur.getStatusSincronizacao());
+							dao.alterar(rec);
+							System.out.println("Curso Atualizado");
+						
 					}
 				}
 			}
@@ -70,27 +82,20 @@ public class SincronizarCurso {
 		}
 	}
 
-	private void desabilitar(final List<Curso> listaAlterarDesabilitar) {
-		try {
-			//Percorre a lista
-			for (Curso cur : listaAlterarDesabilitar) {
-				//Verifica se esta desabilitado
-				if (cur.getStatusSincronizacao().equals("DESABILITADO")) {
-					List<Curso> listaRegistros = new ArrayList<Curso>();
-					listaRegistros =  dao.procuraObjeto(Curso.class, cur.getRegistroUnico());
-					//Percorre a lista de com o curso que possui o RU
-					for(Curso curso :listaRegistros){
-						 Curso rec = (Curso) dao.recuperaId(Curso.class, curso.getId());
-						 rec.setStatusSincronizacao("DESABILITADO");
-						 dao.alterar(rec);
-						System.out.println("Curso Desabilitado");	
-					}
-				}
-			}
-			System.out.println("TODOS OS DADOS FORAM SINCRONIZADOS");
-		} catch (Exception e) {
-			System.out.println("Conexão não estabeleciada: " + e);
-		}
-	}
+	/*
+	 * private void desabilitar(final List<Curso> listaAlterarDesabilitar) { try
+	 * { // Percorre a lista for (Curso cur : listaAlterarDesabilitar) { //
+	 * Verifica se esta desabilitado if
+	 * (cur.getStatusSincronizacao().equals("DESABILITADO")) { List<Curso>
+	 * listaRegistros = new ArrayList<Curso>(); listaRegistros =
+	 * dao.procuraObjeto(Curso.class, cur.getRegistroUnico()); // Percorre a
+	 * lista de com o curso que possui o RU for (Curso curso : listaRegistros) {
+	 * Curso rec = (Curso) dao.recuperaId(Curso.class, curso.getId());
+	 * rec.setStatusSincronizacao("DESABILITADO"); dao.alterar(rec);
+	 * System.out.println("Curso Desabilitado"); } } }
+	 * System.out.println("TODOS OS DADOS FORAM SINCRONIZADOS2"); } catch
+	 * (Exception e) { System.out.println("Conexão não estabeleciada: " + e); }
+	 * }
+	 */
 
 }

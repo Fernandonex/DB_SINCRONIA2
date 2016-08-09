@@ -21,6 +21,7 @@ public class DAOGenerico{
         em.getTransaction().begin();
         Query q = em.createQuery("from " + Usuario.class.getSimpleName()+" where (statusSincronizacao is '"+condicao+"')");
         em.getTransaction().commit();
+        em.clear();
         return q.getResultList();
     }
     
@@ -30,6 +31,7 @@ public class DAOGenerico{
         em.getTransaction().begin();
         em.persist(objeto);
         em.getTransaction().commit();
+        em.clear();
     }
 
     public void deletar(Object objeto) throws Exception {
@@ -39,6 +41,7 @@ public class DAOGenerico{
         objeto = em.find(objeto.getClass(), getChave.invoke(objeto, new Object[0]));
         em.remove(objeto);
         em.getTransaction().commit();
+        em.clear();
 
     }
 
@@ -47,6 +50,7 @@ public class DAOGenerico{
         em.getTransaction().begin();
         em.merge(objeto);
         em.getTransaction().commit();
+        em.clear();
     }
 
     public Object recuperaId(Class classe, Long id) {
@@ -55,6 +59,7 @@ public class DAOGenerico{
         em.getTransaction().begin();
         retornando = em.find(classe, id);
         em.getTransaction().commit();
+        em.clear();
         return retornando;
     }
 }

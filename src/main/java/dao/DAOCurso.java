@@ -18,6 +18,7 @@ public class DAOCurso {
 		em.getTransaction().begin();
 		Query q = em.createQuery("from " + T.getSimpleName() + " where (registroUnico is '" + registro + "')");
 		em.getTransaction().commit();
+		em.clear();
 		return q.getResultList();
 	}
 
@@ -26,6 +27,7 @@ public class DAOCurso {
         em.getTransaction().begin();
         em.persist(objeto);
         em.getTransaction().commit();
+        em.clear();
     }
 
     public void alterar(Object objeto) {
@@ -33,6 +35,7 @@ public class DAOCurso {
         em.getTransaction().begin();
         em.merge(objeto);
         em.getTransaction().commit();
+        em.clear();
     }
 
     public Object recuperaId(Class classe, Long id) {
@@ -41,6 +44,7 @@ public class DAOCurso {
         em.getTransaction().begin();
         retornando = em.find(classe, id);
         em.getTransaction().commit();
+        em.clear();
         return retornando;
     }
 }

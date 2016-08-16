@@ -23,8 +23,8 @@ import com.google.gson.annotations.Expose;
 public class Curso implements Serializable {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="idCurso")
-	@Expose
 	private Long id;
 	@Expose
 	private String nome;
@@ -32,6 +32,8 @@ public class Curso implements Serializable {
 	private String descricao;
 	@Expose
 	private String statusSincronizacao;
+	@Expose
+	private String registroUnico;
 	
 	@OneToMany(cascade= CascadeType.ALL, mappedBy="curso")
 	private List<Usuario> listaUsuarios;
@@ -69,6 +71,14 @@ public class Curso implements Serializable {
 		return id;
 	}
 	
+	public String getRegistroUnico() {
+		return registroUnico;
+	}
+
+
+	public void setRegistroUnico(String registroUnico) {
+		this.registroUnico = registroUnico;
+	}
 
 	public String getStatusSincronizacao() {
 		return statusSincronizacao;
@@ -77,10 +87,6 @@ public class Curso implements Serializable {
 
 	public void setStatusSincronizacao(String statusSincronizacao) {
 		this.statusSincronizacao = statusSincronizacao;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	private static final long serialVersionUID = 1L;

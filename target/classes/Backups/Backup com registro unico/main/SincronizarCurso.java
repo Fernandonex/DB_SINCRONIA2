@@ -49,25 +49,31 @@ public class SincronizarCurso {
 		}
 	}
 
-	private void inserirAlterar(final List<Curso> listaCursos) {
+	private void inserirAlterar(final List<Curso> listaInserir) {
 		try {
-			for (Curso curso : listaCursos) {
-				// Busca o curso pelo id
-				Curso cursoRecuperado = (Curso) dao.recuperaId(Curso.class, curso.getId());
-				// Se a lista for igual a zero, insere os novos cursos
-				if (cursoRecuperado == null) {
-					Curso cur = new Curso();
-					cur = curso;
-					dao.inserir(cur);
-					System.out.println("Curso inserido");
-				}
-				// Senão altera o curso
-				else {
-					cursoRecuperado.setNome(curso.getNome());
-					cursoRecuperado.setDescricao(curso.getDescricao());
-					cursoRecuperado.setStatusSincronizacao(curso.getStatusSincronizacao());
-					dao.alterar(cursoRecuperado);
-					System.out.println("Curso Atualizado");
+			for (Curso cur : listaInserir) {
+				
+					List<Curso> listaRegistros = new ArrayList<Curso>();
+					// Busca o curso pelo registro unico
+					listaRegistros = dao.procuraObjeto(Curso.class, cur.getRegistroUnico());
+					// Se a lista for igual a zero, insere os novos cursos
+					if (listaRegistros.size() == 0) {
+						Curso curso = new Curso();
+						curso = cur;
+						dao.inserir(curso);
+						System.out.println("Curso inserido");
+					}
+					// Senão altera o curso
+					else {
+						for (Curso curso : listaRegistros) {
+							Curso rec = (Curso) dao.recuperaId(Curso.class, curso.getId());
+							rec.setNome(cur.getNome());
+							rec.setDescricao(cur.getDescricao());
+							rec.setStatusSincronizacao(cur.getStatusSincronizacao());
+							dao.alterar(rec);
+							System.out.println("Curso Atualizado");
+						
+					}
 				}
 			}
 			System.out.println("TODOS OS DADOS FORAM SINCRONIZADOS");

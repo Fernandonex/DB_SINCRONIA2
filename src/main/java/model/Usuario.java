@@ -24,7 +24,7 @@ import com.google.gson.annotations.SerializedName;
 public class Usuario implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Expose
 	private Long id;
 	@Expose
 	private String nome;
@@ -107,6 +107,10 @@ public class Usuario implements Serializable {
 
 	public void setStatusSincronizacao(String statusSincronizacao) {
 		this.statusSincronizacao = statusSincronizacao;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	private static final long serialVersionUID = 1L;

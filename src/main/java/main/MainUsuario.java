@@ -11,20 +11,17 @@ public class MainUsuario {
 		Usuario usuario = new Usuario();
 		SincronizarUsuario sincronizarUsuario = new SincronizarUsuario();
 
-		for (int i = 0; i < 10; i++) {
-			daoGenerico = new DAOGenerico();
-			Usuario user = new Usuario();
-			user.setEmail("Fernandoid@ccc.com");
-			user.setNome("Fernando");
-			user.setSenha("Fernando");
-			user.setUsuario("Fernando");
-			user.setStatusSincronizacao("INSERIR");
-			user.setRegistroUnico(null);
-			Curso cur = (Curso) daoGenerico.recuperaId(Curso.class, 1250L);
-			user.setCurso(cur);
-			daoGenerico.inserir(user);
-		}
-		sincronizarUsuario.sincronizarCliToService();
+		daoGenerico = new DAOGenerico();
+		Usuario user = new Usuario();
+		user.setEmail("NovoComID@ccc.com");
+		user.setNome("Fernando");
+		user.setSenha("Fernando");
+		user.setUsuario("Fernando");
+		user.setStatusSincronizacao("INSERIR");
+		user.setRegistroUnico(null);
+		Curso cur = (Curso) daoGenerico.recuperaId(Curso.class, 1250L);
+		user.setCurso(cur);
+		sincronizarUsuario.cadastrarUsuario(user);
 	}
 
 }

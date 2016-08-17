@@ -19,7 +19,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
+import dao.DAOCurso;
 import dao.DAOGenerico;
+import model.Curso;
 import model.Usuario;
 
 public class SincronizarUsuario {
@@ -45,6 +47,33 @@ public class SincronizarUsuario {
 		}
 	}
 
+	
+	public void cadastrarUsuario(Usuario usuario){
+		try {
+				gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+				WebTarget target = cli.target(URL_BASE + "cadastrar");
+				String userString = gson.toJson(usuario);
+				Response response = target.request().post(Entity.entity(userString, MediaType.APPLICATION_JSON));
+				System.out.println("Respose code: " + response.getStatus());
+				if (response.getStatus() == 200) {
+					gson = new Gson();
+					String usuarioNovo = response.readEntity(String.class);
+					Usuario user = gson.fromJson(usuarioNovo, Usuario.class);
+				//Essa parte não vai ser necessária no algoritimo final...
+					Curso curso = (Curso) dao.recuperaId(Curso.class, user.getCurso().getId());
+					user.setCurso(curso);
+					
+					dao.inserir(user);
+				}
+		} catch (Exception e) {
+			System.out.println("Conexão não estabeleciada: " + e);
+		}
+		
+		
+		
+	}
+	
+	
 	private void inserir(List<Usuario> listaInserir) {
 		try {
 			for (Usuario obj : listaInserir) {
